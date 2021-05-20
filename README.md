@@ -70,12 +70,13 @@ Access via swagger ui:
 1. Create API model fo ExchangeRate so that is decoopled from Exchange Rate and so that it has fields "base" ("BTC")
    and "currency" ("USD")
 2. Improve API error handling and improve Swagger Endpoints description
-3. Add logback configuration for dev and production environment with saving logs to files with proper time and size
+3. Add Api tests and do some performance tests.
+4. Add logback configuration for dev and production environment with saving logs to files with proper time and size
    based policy
-4. Change DB to timescaleDB or QuantDB (they are SQL compliant)
-5. Add monitoring
-6. Reimplements saving exchangeRates so that it uses kafka
-7. Prepare integration test using testcontainers
-8. Prepare docker, docker compose fields for setting up the environment 
+5. Change DB to timescaleDB or QuantDB (they are SQL compliant)
+6. Add monitoring
+7. Reimplements saving exchangeRates so that it uses kafka
+8. Prepare integration test using testcontainers
+9. Prepare docker, docker compose fields for setting up the environment 
 
 
