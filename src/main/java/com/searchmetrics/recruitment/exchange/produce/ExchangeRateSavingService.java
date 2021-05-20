@@ -25,6 +25,7 @@ public class ExchangeRateSavingService {
 
     @Transactional
     public Flux<ExchangeRate> saveAll(List<ExchangeRate> exchangeRate){
+        logger.debug("Saving exchangeRates to repository");
         return exchangeRateRepository.saveAll(exchangeRate)
                 .doOnError(ex -> logger.error("Exception on saving Bitcoin rates.\n"+ ex.getMessage()))
                 .onErrorResume(e -> Flux.empty());

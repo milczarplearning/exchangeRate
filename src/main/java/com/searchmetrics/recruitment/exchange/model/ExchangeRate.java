@@ -41,4 +41,12 @@ public class ExchangeRate {
     public int hashCode() {
         return Objects.hash(dateTime, rate);
     }
+
+    @Override
+    public String toString() {
+        return "ExchangeRate{" +
+                "dateTime=" + dateTime +
+                ", rate=" + rate +
+                '}';
+    }
 }
