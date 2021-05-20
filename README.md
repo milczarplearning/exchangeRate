@@ -68,7 +68,7 @@ Access via swagger ui:
 ##### What needs to be changed to be production ready
 
 1. Create API model fo ExchangeRate so that is decoopled from Exchange Rate and so that it has fields "base" ("BTC")
-   and "currency" ("USD")
+   and "currency" ("USD") and add Paging to historical data
 2. Improve API error handling and improve Swagger Endpoints description
 3. Add Api tests and do some performance tests.
 4. Add logback configuration for dev and production environment with saving logs to files with proper time and size
