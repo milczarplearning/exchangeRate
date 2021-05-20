@@ -1,9 +1,7 @@
-package com.searchmetrics.recruitment.exchange
+package com.searchmetrics.recruitment.exchange.api
 
-import com.searchmetrics.recruitment.exchange.api.ExchangeRateApiController
 import com.searchmetrics.recruitment.exchange.model.ExchangeRate
-import com.searchmetrics.recruitment.exchange.query.HistoricalExchangeRateService
-import com.searchmetrics.recruitment.exchange.repository.LatestExchangeRateRepository
+import com.searchmetrics.recruitment.exchange.query.QueryExchangeRateService
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -28,10 +26,7 @@ class ExchangeRateApiControllerTest extends Specification {
     LocalDate endDate = LocalDate.now().minusDays(5)
 
     @SpringBean
-    LatestExchangeRateRepository latestExchangeRateService = Stub()
-
-    @SpringBean
-    HistoricalExchangeRateService historicalExchangeRateService = Stub()
+    QueryExchangeRateService queryExchangeRateService = Stub()
 
 
     @Autowired
@@ -39,11 +34,11 @@ class ExchangeRateApiControllerTest extends Specification {
 
     def "should get proper latest rate"(){
         given:
-        latestExchangeRateService.getRate() >> Mono.just(testRate)
+        queryExchangeRateService.getRate() >> Mono.just(testRate)
 
         expect:
         testRate == webClient.get()
-                .uri("/exchangeRate/latest")
+                .uri("/exchangeRate/BTC-USD/latest")
                 .header(ACCEPT, "application/json")
                 .exchange()
                 .expectStatus().isOk()
@@ -55,11 +50,11 @@ class ExchangeRateApiControllerTest extends Specification {
 
     def "should get no content"(){
         given:
-        latestExchangeRateService.getRate() >> Mono.empty()
+        queryExchangeRateService.getRate() >> Mono.empty()
 
         expect:
         webClient.get()
-                .uri("/exchangeRate/latest")
+                .uri("/exchangeRate/BTC-USD/latest")
                 .header(ACCEPT, "application/json")
                 .exchange()
                 .expectStatus().isNoContent()
@@ -67,11 +62,11 @@ class ExchangeRateApiControllerTest extends Specification {
 
     def "should get proper history rate"(){
         given:
-        historicalExchangeRateService.getHistoricalRates(startDate , endDate) >> Flux.just(testRate)
+        queryExchangeRateService.getHistoricalRates(startDate, endDate) >> Flux.just(testRate)
 
         expect:
         webClient.get()
-                .uri("/exchangeRate?startDate={startDate}&endDate={endDate}",startDate.format(ISO_DATE), endDate.format(ISO_DATE ))
+                .uri("/exchangeRate/BTC-USD/?startDate={startDate}&endDate={endDate}", startDate.format(ISO_DATE), endDate.format(ISO_DATE))
                 .header(ACCEPT, "application/json")
                 .exchange()
                 .expectStatus().isOk()
@@ -82,11 +77,11 @@ class ExchangeRateApiControllerTest extends Specification {
 
     def "should return empty list"(){
         given:
-        historicalExchangeRateService.getHistoricalRates(startDate , endDate) >> Flux.empty()
+        queryExchangeRateService.getHistoricalRates(startDate, endDate) >> Flux.empty()
 
         expect:
         webClient.get()
-                .uri("/exchangeRate?startDate={startDate}&endDate={endDate}",startDate.format(ISO_DATE), endDate.format(ISO_DATE ))
+                .uri("/exchangeRate/BTC-USD/?startDate={startDate}&endDate={endDate}", startDate.format(ISO_DATE), endDate.format(ISO_DATE))
                 .header(ACCEPT, "application/json")
                 .exchange()
                 .expectStatus().isOk()
@@ -94,14 +89,4 @@ class ExchangeRateApiControllerTest extends Specification {
                 .hasSize(0)
     }
 
-    def "should return exception on wrong date format"(){
-        expect:
-        webClient.get()
-                .uri("/exchangeRate")
-                .header(ACCEPT, "application/json")
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBodyList(ExchangeRate.class)
-                .hasSize(0)
-    }
 }

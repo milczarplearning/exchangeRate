@@ -1,4 +1,4 @@
-package com.searchmetrics.recruitment.exchange.produce;
+package com.searchmetrics.recruitment.exchange.produce.fetch;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,23 +49,23 @@ public class CoinbaseExchangeRateFetcher implements ExchangeRateFetcher {
                 .doOnError(Exception.class, ex -> logger.error("Error on fetching exchangeRate fron Coinbase.\n"+ ex.getMessage()));
     }
 
-    public static class CoinbaseResponse{
+    static class CoinbaseResponse {
         CoinbaseExchangeRate data;
 
         @JsonCreator
-        public CoinbaseResponse(@JsonProperty("data") CoinbaseExchangeRate data) {
+        CoinbaseResponse(@JsonProperty("data") CoinbaseExchangeRate data) {
             this.data = data;
         }
     }
 
 
-    public static class CoinbaseExchangeRate{
+    static class CoinbaseExchangeRate {
         String base;
         String currency;
         BigDecimal amount;
 
         @JsonCreator
-        public CoinbaseExchangeRate(@JsonProperty("base")String base, @JsonProperty("currency")String currency,@JsonProperty("amount") BigDecimal amount) {
+        CoinbaseExchangeRate(@JsonProperty("base") String base, @JsonProperty("currency") String currency, @JsonProperty("amount") BigDecimal amount) {
             this.base = base;
             this.currency = currency;
             this.amount = amount;

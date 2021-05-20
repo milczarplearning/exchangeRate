@@ -6,12 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -25,7 +22,6 @@ public class ExchangeRateSavingService {
     public ExchangeRateSavingService(ExchangeRateRepository exchangeRateRepository) {
         this.exchangeRateRepository = exchangeRateRepository;
     }
-
 
     @Transactional
     public Flux<ExchangeRate> saveAll(List<ExchangeRate> exchangeRate){

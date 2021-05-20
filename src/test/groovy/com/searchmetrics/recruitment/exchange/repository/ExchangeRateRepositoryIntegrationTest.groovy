@@ -8,12 +8,12 @@ import spock.lang.Specification
 import java.time.LocalDateTime
 
 @SpringBootTest
-class ExchangeRateRepositoryTest extends Specification {
+class ExchangeRateRepositoryIntegrationTest extends Specification {
 
     @Autowired
-    ExchangeRateRepository exchangeRateRepository;
+    ExchangeRateRepository exchangeRateRepository
 
-    def "should save and retrieve data"(){
+    def "should save and retrieve data"() {
         given:
         def exchangeRate = new ExchangeRate(new BigDecimal(22), LocalDateTime.now())
 

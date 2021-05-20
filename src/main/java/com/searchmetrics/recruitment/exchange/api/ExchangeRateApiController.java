@@ -1,8 +1,7 @@
 package com.searchmetrics.recruitment.exchange.api;
 
-import com.searchmetrics.recruitment.exchange.query.HistoricalExchangeRateService;
-import com.searchmetrics.recruitment.exchange.repository.LatestExchangeRateRepository;
 import com.searchmetrics.recruitment.exchange.model.ExchangeRate;
+import com.searchmetrics.recruitment.exchange.query.QueryExchangeRateService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,28 +19,26 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("exchangeRate")
+@RequestMapping("/exchangeRate/BTC-USD")
 @Validated
 public class ExchangeRateApiController {
 
-    private LatestExchangeRateRepository latestExchangeRateRepository;
-    private HistoricalExchangeRateService historicalExchangeRateService;
+    private QueryExchangeRateService queryExchangeRateService;
 
     @Autowired
-    public ExchangeRateApiController(LatestExchangeRateRepository latestExchangeRateRepository, HistoricalExchangeRateService historicalExchangeRateService) {
-        this.latestExchangeRateRepository = latestExchangeRateRepository;
-        this.historicalExchangeRateService = historicalExchangeRateService;
+    public ExchangeRateApiController(QueryExchangeRateService queryExchangeRateService) {
+        this.queryExchangeRateService = queryExchangeRateService;
     }
 
     @GetMapping(path = "/latest")
     public Mono<ResponseEntity<ExchangeRate>> latest() {
-        return latestExchangeRateRepository.getRate()
+        return queryExchangeRateService.getRate()
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
 
     @GetMapping()
-    public Flux<ExchangeRate> history(
+    public Flux<ExchangeRate> historical(
             @ApiParam(
                     name = "startDate",
                     format = "YYYY-MM-dd",
@@ -53,6 +50,6 @@ public class ExchangeRateApiController {
                     example = "2021-05-10",
                     required = true)
             @NotNull @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return historicalExchangeRateService.getHistoricalRates(startDate, endDate);
+        return queryExchangeRateService.getHistoricalRates(startDate, endDate);
     }
 }
