@@ -73,7 +73,7 @@ Access via swagger ui:
 3. Add Api tests and do some performance tests.
 4. Add logback configuration for dev and production environment with saving logs to files with proper time and size
    based policy
-5. Change DB to timescaleDB or QuantDB (they are SQL compliant)
+5. Change DB to timescaleDB or QuestDB (they are SQL compliant)
 6. Add monitoring
 7. Reimplements saving exchangeRates so that it uses kafka
 8. Prepare integration test using testcontainers
